@@ -5,6 +5,7 @@ import bowling.domain.Round;
 import bowling.domain.ScoreSymbol;
 
 public class NormalFrame extends Frame {
+    private static final String PIPE = "|";
     public static final int MAX_PLAY_COUNT = 2;
 
     private ScoreSymbol scoreSymbol;
@@ -52,7 +53,19 @@ public class NormalFrame extends Frame {
         return ScoreSymbol.valueOf(getTotalPinCount(), isFirst());
     }
 
-    public ScoreSymbol getScoreSymbol() {
-        return scoreSymbol;
+    public String scoreToString() {
+        if (scoreSymbol == null) {
+            return String.format("%d", getFirstPin());
+        }
+        if (scoreSymbol.equals(ScoreSymbol.STRIKE)) {
+            return String.format("%1s", ScoreSymbol.STRIKE.getSymbol());
+        }
+        if (scoreSymbol.equals(ScoreSymbol.SPARE)) {
+            return String.format("%d%s%s", getFirstPin(), PIPE, ScoreSymbol.SPARE.getSymbol());
+        }
+        if (scoreSymbol.equals(ScoreSymbol.GUTTER)) {
+            return String.format("%d%s%s", getFirstPin(), PIPE, ScoreSymbol.GUTTER.getSymbol());
+        }
+        return String.format("%d%s%d", getFirstPin(), PIPE, getSecondPin());
     }
 }

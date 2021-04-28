@@ -43,21 +43,8 @@ public class ResultView {
     }
 
     private String normalFrameScoreToString(NormalFrame frame) {
-        if (frame.getScoreSymbol() == null) {
-            return String.format("  %d   |", frame.getFirstPin());
-        }
-        if (frame.getScoreSymbol().equals(ScoreSymbol.STRIKE)) {
-            return String.format("  %1s   |", ScoreSymbol.STRIKE.getSymbol());
-        }
-        if (frame.getScoreSymbol().equals(ScoreSymbol.SPARE)) {
-            return String.format("  %d|%s |", frame.getFirstPin(), ScoreSymbol.SPARE.getSymbol());
-        }
-        if (frame.getScoreSymbol().equals(ScoreSymbol.GUTTER)) {
-            return String.format("  %d|%s |", frame.getFirstPin(), ScoreSymbol.GUTTER.getSymbol());
-        }
-        return String.format("  %d|%d |", frame.getFirstPin(), frame.getSecondPin());
+        return String.format(" %3s  |", frame.scoreToString());
     }
-
 
     private String finalFrameScoreToString(Frame frame) {
         int firstPin = frame.getFirstPin();

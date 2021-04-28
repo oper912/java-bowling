@@ -20,24 +20,85 @@ class NormalFrameTest {
                 .hasMessageContaining("핀을 최대 10개까지 쓰러뜨릴 수 있습니다.");
     }
 
-    @DisplayName("스트라이크를 치면 프레임 ScoreSymbol을 스트라이크로 set한다")
+    @DisplayName("라운드 진행중일떄 첫번째 투구가 스트라이크가 아니면 출력시 쓰러뜨린 핀만 출력한다")
     @Test
-    void next_symbole_strike() {
+    void scoreToString() {
+        // given
         Frame frame = NormalFrame.newInstance();
-        frame.play(10);
-        frame.next(Round.from(2));
+        int countOfDownPin = 9;
 
-        assertThat(((NormalFrame) frame).getScoreSymbol()).isEqualTo(ScoreSymbol.STRIKE);
+        // when
+        frame.play(countOfDownPin);
+
+        // then
+        assertThat(((NormalFrame) frame).scoreToString()).isEqualTo(String.valueOf(countOfDownPin));
     }
 
-    @DisplayName("스페어처리를 하면 프레임 ScoreSymbol을 스페어로 Set한다")
+    @DisplayName("첫번째 투구가 스트라이크이면 출력시 스트라이크 심볼만 출력한다")
     @Test
-    void next_symbol_spare() {
+    void scoreToString_strike() {
+        // given
         Frame frame = NormalFrame.newInstance();
-        frame.play(5);
-        frame.play(5);
+        int countOfDownPin = 10;
+
+        // when
+        frame.play(countOfDownPin);
         frame.next(Round.from(2));
 
-        assertThat(((NormalFrame) frame).getScoreSymbol()).isEqualTo(ScoreSymbol.SPARE);
+        // then
+        assertThat(((NormalFrame) frame).scoreToString()).isEqualTo(ScoreSymbol.STRIKE.getSymbol());
+    }
+
+    @DisplayName("스페어처리를 하면 출력시 \"첫번째투구|게터심볼\" 형태로 출력한다")
+    @Test
+    void scoreToString_spare() {
+        // given
+        Frame frame = NormalFrame.newInstance();
+        int firstCountOfDownPin = 5;
+        int secondCountOfDownPin = 5;
+
+        // when
+        frame.play(firstCountOfDownPin);
+        frame.play(secondCountOfDownPin);
+        frame.next(Round.from(2));
+
+        // then
+        assertThat(((NormalFrame) frame).scoreToString())
+                .isEqualTo(String.format("%d|%s", firstCountOfDownPin, ScoreSymbol.SPARE.getSymbol()));
+    }
+
+    @DisplayName("게터일 때 출력을 하면 \"첫번째투구|게터심볼\" 형태로 출력한다")
+    @Test
+    void scoreToString_gutter() {
+        // given
+        Frame frame = NormalFrame.newInstance();
+        int firstCountOfDownPin = 5;
+        int secondCountOfDownPin = 0;
+
+        // when
+        frame.play(firstCountOfDownPin);
+        frame.play(secondCountOfDownPin);
+        frame.next(Round.from(2));
+
+        assertThat(((NormalFrame) frame).scoreToString())
+                .isEqualTo(String.format("%d|%s", firstCountOfDownPin, ScoreSymbol.GUTTER.getSymbol()));
+    }
+
+    @DisplayName("미스일 때 출력을 하면 \"첫번째투구|두번째투구\" 형태로 출력한다")
+    @Test
+    void scoreToString_miss() {
+        // given
+        Frame frame = NormalFrame.newInstance();
+        int firstCountOfDownPin = 5;
+        int secondCountOfDownPin = 3;
+
+        // when
+        frame.play(firstCountOfDownPin);
+        frame.play(secondCountOfDownPin);
+        frame.next(Round.from(2));
+
+        // then
+        assertThat(((NormalFrame) frame).scoreToString())
+                .isEqualTo(String.format("%d|%d", firstCountOfDownPin, secondCountOfDownPin));
     }
 }
