@@ -7,13 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Frame {
-    public static final int FIRST_PLAY = 1;
-    public static final int SECOND_PLAY = 2;
-    public static final int BONUS_PLAY = 3;
-    public static final int FIRST_PIN = 0;
-    public static final int SECOND_PIN = 1;
-    public static final int BONUS_PIN = 2;
-
     protected List<Pin> pins;
 
     public Frame() {
@@ -34,31 +27,31 @@ public abstract class Frame {
 
     public int getTotalPinCount() {
         return pins.stream()
-                .map(Pin::getPin)
-                .reduce(Pin.MIN_PIN_COUNT, Integer::sum);
+                .mapToInt(Pin::getPin)
+                .sum();
     }
 
     public int getFirstPin() {
-        return pins.get(FIRST_PIN).getPin();
+        return pins.get(PinSequence.FIRST.getSequence()).getPin();
     }
 
     public int getSecondPin() {
-        return pins.get(SECOND_PIN).getPin();
+        return pins.get(PinSequence.SECOND.getSequence()).getPin();
     }
 
     public int getBonusPin() {
-        return pins.get(BONUS_PIN).getPin();
+        return pins.get(PinSequence.BONUS.getSequence()).getPin();
     }
 
     public boolean isFirst() {
-        return pins.size() == Frame.FIRST_PLAY;
+        return pins.size() == PlaySequence.FIRST.getSequence();
     }
 
     public boolean isSecond() {
-        return pins.size() == Frame.SECOND_PLAY;
+        return pins.size() == PlaySequence.SECOND.getSequence();
     }
 
     public boolean isBonus() {
-        return pins.size() == Frame.BONUS_PLAY;
+        return pins.size() == PlaySequence.BONUS.getSequence();
     }
 }
