@@ -1,6 +1,8 @@
 package bowling.domain;
 
-import bowling.domain.frame.Frame;import bowling.domain.frame.NormalFrame;import java.util.ArrayList;
+import bowling.domain.frame.Frame;
+import bowling.domain.frame.NormalFrame;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,10 +26,18 @@ public class Frames {
     }
 
     public boolean isPlayable() {
-        if (frames.size() < Round.BOWLING_MAX_ROUND) {
+        if (hasNextRound()) {
             return true;
         }
-        return !frames.get(Round.BOWLING_MAX_ROUND - 1).isEnd();
+        return !getFinalRound().isEnd();
+    }
+
+    private boolean hasNextRound() {
+        return Round.BOWLING_MAX_ROUND > frames.size();
+    }
+
+    private Frame getFinalRound() {
+        return frames.get(Round.BOWLING_MAX_ROUND - 1);
     }
 
     public void play(final int countOfDownPin) {
